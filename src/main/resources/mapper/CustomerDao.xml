@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bingo.customer_tracking.dao.UserDao">
+    <select id="quaryCustomers" resultType="com.bingo.customer_tracking.entity.Customer">
+        SELECT customer_id,customer_name,contact_phone,contact_person,important_level,risk_level,staff_size,customer_pictures,date_time,note
+        FROM customer ORDER BY customer_id DESC
+    </select>
+
+    <select id="quaryCustomerAttentions" resultType="com.bingo.customer_tracking.entity.Customer">
+        SELECT customer.customer_id,customer_name,contact_phone,contact_person,important_level,risk_level,staff_size,customer_pictures,date_time,note
+        FROM attention INNER JOIN customer
+        ON attention.customer_id = customer.customer_id AND attention.user_id = #{useId}
+        </select>
+
+    <insert id="insertCustomer" useGeneratedKeys="true" keyProperty="customerId"
+            keyColumn="customer_id">
+        INSERT INTO
+        customer(customer_name,contact_phone,contact_person,
+        important_level,risk_level,staff_size,customer_pictures,date_time,note)
+        VALUES
+        (#{customerName},#{contactPhone},#{contactPerson},#{importantLevel},
+        #{riskLevel},#{staffSize},#{customerPictures},#{dateTime},#{note})
+    </insert>
+
+    <update id="updateCustomer" parameterType="com.bingo.customer_tracking.entity.Customer">
+        update customer
+        <set>
+            <if test="customerName != null">customer_name=#{customerName},</if>
+            <if test="contactPhone != null">contact_phone=#{contactPhone},</if>
+            <if test="contactPerson != null">contact_person=#{contactPerson},</if>
+            <if test="importantLevel != null">important_level=#{importantLevel},</if>
+            <if test="riskLevel != null">risk_level=#{riskLevel},</if>
+            <if test="staffSize != null">staff_size=#{staffSize},</if>
+            <if test="customerPictures != null">customer_pictures=#{customerPictures},</if>
+            <if test="dateTime != null">date_time=#{dateTime},</if>
+            <if test="note != null">note=#{note}</if>
+            </set>
